@@ -18,28 +18,28 @@ find_package(OpenGL REQUIRED)
 find_package(glfw3 REQUIRED)
 
 add_library(imgui STATIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs/imgui/imgui.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs/imgui/imgui_draw.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs/imgui/imgui_widgets.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs/imgui/imgui_tables.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs/imgui/imgui_demo.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui/imgui.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui/imgui_draw.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui/imgui_widgets.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui/imgui_tables.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui/imgui_demo.cpp
 )
-target_include_directories(imgui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/libs/imgui)
+target_include_directories(imgui PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui)
 
-add_library(backends STATIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_glfw.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
+add_library(backend STATIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/backend/imgui_impl_glfw.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/backend/imgui_impl_opengl3.cpp
 )
-target_include_directories(backends PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/backends ${CMAKE_CURRENT_SOURCE_DIR}/libs/imgui)
+target_include_directories(backend PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/backend ${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui)
 
 add_library(implot STATIC
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs/implot/implot.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs/implot/implot_items.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs/implot/implot_demo.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/implot/implot.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/implot/implot_items.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/implot/implot_demo.cpp
 )
 target_include_directories(implot PUBLIC 
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs/implot
-    ${CMAKE_CURRENT_SOURCE_DIR}/libs/imgui
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/implot
+    ${CMAKE_CURRENT_SOURCE_DIR}/lib/imgui
 
 )
 
@@ -59,7 +59,7 @@ target_include_directories(linux-resource-monitor PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Models
 )
 
-target_link_libraries(linux-resource-monitor PUBLIC imgui backends glfw ${OPENGL_LIBRARY} implot)
+target_link_libraries(linux-resource-monitor PUBLIC imgui backend glfw ${OPENGL_LIBRARY} implot)
 
 
 # test
