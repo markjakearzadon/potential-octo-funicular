@@ -10,7 +10,52 @@
 #include "imgui.h"
 #include "implot.h"
 
+namespace {
+void CoreUI(CPU &cpu) {
+    std::vector<Core> cores = cpu.GetCpuUsage();
+    if (!cores.empty())
+        cores.erase(cores.begin());
+
+    static std::vector<Core> prevCores;
+
+    ImGui::BeginChild("Cores", ImVec2(0, 0),
+                      ImGuiChildFlags_Border | ImGuiChildFlags_AutoResizeY);
+
+    if (!prevCores.empty()) {
+        for (int i = 0; i < cores.size(); i++) {
+            const Core &currentCore = cores[i];
+            const Core &previousCore = prevCores[i];
+            int currentCoreIdle = currentCore.stat[3] + currentCore.stat[4];
+            int currentCoreTotal = 0;
+            for (int i : currentCore.stat)
+                currentCoreTotal += i;
+            int previousCoreIdle = previousCore.stat[3] + previousCore.stat[4];
+            int previousCoreTotal = 0;
+            for (int i : previousCore.stat)
+                previousCoreTotal += i;
+            int TotalDiff = currentCoreTotal - previousCoreTotal;
+            int IdleDiff = currentCoreIdle - previousCoreIdle;
+            float coreUsage = 0.0f;
+            if (TotalDiff > 0)
+                coreUsage =
+                    (float)(TotalDiff - IdleDiff) / (float)TotalDiff * 100.0f;
+            else
+                coreUsage = 0;
+            ImGui::Text("Core %d: %.1f%% race condition error me thinks", i,
+                        coreUsage);
+        }
+    } else {
+        for (int i = 0; i < cores.size(); i++) {
+            ImGui::Text("Core %d: 0.0%%", i);
+        }
+    }
+    ImGui::EndChild();
+    prevCores = cores;
+}
+
+}  // namespace
 namespace Application {
+
 void ProcessUI(std::vector<Process> &processes) {
     ImGuiWindowFlags window_flags =
         ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_AlwaysVerticalScrollbar;
@@ -63,8 +108,13 @@ void CpuUI(CPU &cpu) {
     ImPlotAxisFlags axisflags = ImPlotAxisFlags_NoGridLines |
                                 ImPlotAxisFlags_NoHighlight |
                                 ImPlotAxisFlags_NoTickMarks;
-    ImGui::Begin("Cpu");
-    if (ImPlot::BeginPlot("CPU")) {
+
+    ImVec2 plot_size = ImVec2(0, 0);
+    ImGui::BeginChild("Cpu", ImVec2(0, 0),
+                      ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_Border);
+
+    if (ImPlot::BeginPlot("CPU", ImVec2(0, 0),
+                          ImPlotFlags_NoLegend | ImPlotFlags_NoFrame)) {
         ImPlot::SetupAxis(ImAxis_X1, nullptr, axisflags);
         ImPlot::SetupAxis(ImAxis_Y1, nullptr,
                           axisflags | ImPlotAxisFlags_Opposite);
@@ -88,43 +138,8 @@ void CpuUI(CPU &cpu) {
     }
 
     // Core usage
-    std::vector<Core> cores = cpu.GetCpuUsage();
-    if (!cores.empty())
-        cores.erase(cores.begin());
-
-    static std::vector<Core> prevCores;
-
-    if (!prevCores.empty()) {
-        for (int i = 0; i < cores.size(); i++) {
-            const Core &currentCore = cores[i];
-            const Core &previousCore = prevCores[i];
-            int currentCoreIdle = currentCore.stat[3] + currentCore.stat[4];
-            int currentCoreTotal = 0;
-            for (int i : currentCore.stat)
-                currentCoreTotal += i;
-            int previousCoreIdle = previousCore.stat[3] + previousCore.stat[4];
-            int previousCoreTotal = 0;
-            for (int i : previousCore.stat)
-                previousCoreTotal += i;
-            int TotalDiff = currentCoreTotal - previousCoreTotal;
-            int IdleDiff = currentCoreIdle - previousCoreIdle;
-            float coreUsage = 0.0f;
-            if (TotalDiff > 0)
-                coreUsage =
-                    (float)(TotalDiff - IdleDiff) / (float)TotalDiff * 100.0f;
-            else
-                coreUsage = 0;
-            ImGui::Text("Core %d: %.1f%% race condition error me thinks", i,
-                        coreUsage);
-        }
-    } else {
-        for (int i = 0; i < cores.size(); i++) {
-            ImGui::Text("Core %d: 0.0%%", i);
-        }
-    }
-    prevCores = cores;
-
-    ImGui::End();
+    ImGui::EndChild();
+    CoreUI(cpu);
 }
 
 };  // namespace Application

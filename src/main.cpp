@@ -155,13 +155,20 @@ int main(int, char**) {
         }
         ImGui::End();
 
+        ImGui::ShowDemoWindow();
+        ImPlot::ShowDemoWindow();
+
         // Process UI
         ImGui::SetNextWindowSize(ImVec2(600, 400), ImGuiCond_FirstUseEver);
         std::vector<Process> process = s_processManager.get_process();
         Application::ProcessUI(process);
 
         // CPU usage plot
-        Application::CpuUI(s_CpuManager);
+        if (ImGui::Begin("CPU")) {
+            Application::CpuUI(s_CpuManager);
+        }
+        ImGui::End();
+
         // Render
         ImGui::Render();
         int display_w, display_h;
