@@ -18,8 +18,9 @@ void CoreUI(CPU &cpu) {
 
     static std::vector<Core> prevCores;
 
-    ImGui::BeginChild("Cores", ImVec2(0, 0),
-                      ImGuiChildFlags_Border | ImGuiChildFlags_AutoResizeY);
+    ImGui::BeginChild(
+        "Cores", ImVec2(0, 0),
+        ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_AutoResizeY);
 
     if (!prevCores.empty()) {
         for (int i = 0; i < cores.size(); i++) {
@@ -109,11 +110,10 @@ void CpuUI(CPU &cpu) {
                                 ImPlotAxisFlags_NoHighlight |
                                 ImPlotAxisFlags_NoTickMarks;
 
-    ImVec2 plot_size = ImVec2(0, 0);
-    ImGui::BeginChild("Cpu", ImVec2(0, 0),
-                      ImGuiChildFlags_AutoResizeY | ImGuiChildFlags_Border);
+    ImGui::BeginChild("Cpu", ImVec2(0, 0), ImGuiChildFlags_Border);
 
-    if (ImPlot::BeginPlot("CPU", ImVec2(0, 0),
+    // ImPlot::SetNextAxesToFit();
+    if (ImPlot::BeginPlot("CPU", ImVec2(-1, -1),
                           ImPlotFlags_NoLegend | ImPlotFlags_NoFrame)) {
         ImPlot::SetupAxis(ImAxis_X1, nullptr, axisflags);
         ImPlot::SetupAxis(ImAxis_Y1, nullptr,
@@ -121,6 +121,7 @@ void CpuUI(CPU &cpu) {
         ImPlot::SetupAxisLimits(ImAxis_X1, t - 60.0f, t - 0.9,
                                 ImGuiCond_Always);
         ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 100);
+
         if (sample_timer >= 1.0f) {
             float cpuUsage = cpu.GetCpuPercentage();
             sample_timer = 0.0f;
@@ -134,12 +135,14 @@ void CpuUI(CPU &cpu) {
         ImPlot::PlotShaded("cpu", time.data(), usage.data(), count, 0, 0);
         ImPlot::PopStyleVar();
         ImPlot::PlotLine("cpu", time.data(), usage.data(), count, 0, 0);
+        if (ImGui::BeginItemTooltip()) {
+            CoreUI(cpu);
+            ImGui::EndTooltip();
+        }
         ImPlot::EndPlot();
     }
 
-    // Core usage
     ImGui::EndChild();
-    CoreUI(cpu);
 }
 
 };  // namespace Application

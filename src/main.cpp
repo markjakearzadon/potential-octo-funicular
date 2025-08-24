@@ -164,7 +164,7 @@ int main(int, char**) {
         Application::ProcessUI(process);
 
         // CPU usage plot
-        if (ImGui::Begin("CPU")) {
+        if (ImGui::Begin("CPU", nullptr)) {
             Application::CpuUI(s_CpuManager);
         }
         ImGui::End();
