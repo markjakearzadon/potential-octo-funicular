@@ -1,8 +1,8 @@
-#include "Memory.h"
-
 #include <fstream>
 #include <sstream>
 #include <unordered_map>
+
+#include "Mem.h"
 
 std::unordered_map<std::string, long> GetMemoryInfo() {
     std::unordered_map<std::string, long> memStat;

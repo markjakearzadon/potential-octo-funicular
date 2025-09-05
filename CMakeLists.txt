@@ -67,7 +67,7 @@ add_executable(test
     ${CMAKE_CURRENT_SOURCE_DIR}/src/test.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ProcessManager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/ProcessParser.cpp
-    # ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/Memory.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/MemoryParser.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/CpuParser.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/Core/CpuManager.cpp
 )

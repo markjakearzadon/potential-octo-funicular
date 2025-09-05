@@ -145,4 +145,6 @@ void CpuUI(CPU &cpu) {
     ImGui::EndChild();
 }
 
+void MemoryUI() {}
+
 };  // namespace Application

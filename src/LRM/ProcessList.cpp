@@ -9,11 +9,11 @@ void RenderProcessTable(std::vector<Process*>& processes, int& selectedIndex) {
     if (ImGui::BeginTable("Processes", 5,
                           ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg |
                               ImGuiTableFlags_Resizable)) {
-        ImGui::TableSetupColumn("PID");
+        ImGui::TableSetupColumn("PID", ImGuiTableColumnFlags_WidthFixed);
         ImGui::TableSetupColumn("Command");
-        ImGui::TableSetupColumn("VIRT");
-        ImGui::TableSetupColumn("RES");
-        ImGui::TableSetupColumn("SHR");
+        ImGui::TableSetupColumn("VIRT", ImGuiTableColumnFlags_WidthFixed);
+        ImGui::TableSetupColumn("RES", ImGuiTableColumnFlags_WidthFixed);
+        ImGui::TableSetupColumn("SHR", ImGuiTableColumnFlags_WidthFixed);
         ImGui::TableHeadersRow();
 
         int process_size = processes.size();

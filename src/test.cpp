@@ -1,22 +1,11 @@
-
-
 #include <iostream>
-#include <vector>
+
+#include "MemoryParser.h"
 
 int main() {
-  std::vector<int> thisismyint = {1, 2, 3, 4};
+    auto mem = GetMemoryInfo();
 
-  for (int &i : thisismyint) {
-    std::cout << i << std::endl;
-  }
-
-  std::cout << "\n";
-
-  thisismyint.erase(thisismyint.begin());
-
-  for (int &i : thisismyint) {
-    std::cout << i << std::endl;
-  }
-
-  std::cin.get();
+    for (auto it = mem.begin(); it != mem.end(); it++) {
+        std::cout << it->first << " " << it->second << std::endl;
+    }
 }
